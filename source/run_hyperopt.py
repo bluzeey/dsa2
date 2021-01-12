@@ -489,5 +489,56 @@ def objective(values):
 
 
 """
+"""
+import pandas as pd
+import numpy as np
+import sklearn
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_predict
+from sklearn.metrics import accuracy_score
 
+!pip install optuna
 
+param_dict={'n_estimators':100,
+            'max_depth':3,
+            'min_samples_split':2,
+            'min_samples_leaf':2,
+            'min_weight_fraction_leaf':0.0,
+            'criterion':'gini',
+            'max_features':'sqrt'}
+
+def objective(param_dict):
+  model=RandomForestClassifier(**param_dict)
+  model.fit(X_train,y_train)
+  y_pred=model.predict(X_test)
+  score=model.score(X_test, y_test)
+  return -score
+
+param_dict_range={'max_depth':('int',  1, 10, 'uniform'),
+						      'n_estimators':('int', 0, 1000,  'uniform'),
+                  'min_samples_split':('uniform',0,1,'uniform'),
+                  'min_samples_leaf':('int',2,10,'uniform'),
+                  'min_weight_fraction_leaf':('uniform',0.001,0.5,'uniform'),
+                  'criterion':('categorical',['gini','entropy']),
+                  'max_features':('categorical',['auto', 'sqrt', 'log2'])}
+engine_pars={'metric_target':'roc_auc_score'}
+
+#Running the function for quadratic and cubic equations
+param_dict1={'x':2,
+             'y':{'z':3,'l':2}}
+print('y' in param_dict1)
+def objective1(param_dict1):
+     x=param_dict1.get('x')
+     z=param_dict1['y']['z'] 
+     obj=-((x - 2)**3 + z**2)
+     return obj
+param_dict_range1={'x':('int',-100,100,'uniform'),
+                   'y':{'z':('int',-100,100,'uniform')}}
+engine_pars1={'metric_target':'loss'}
+result_p=run_hyper_optuna(objective1,param_dict,param_dict_range1,engine_pars1,100)
+"""

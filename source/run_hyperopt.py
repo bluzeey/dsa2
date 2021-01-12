@@ -56,7 +56,7 @@ def run_hyper_optuna(obj_fun, pars_dict_init,  pars_dict_range,  engine_pars, nt
                 if   x == 'log_uniform':      pres = trial.suggest_loguniform(t, p[1], p[2])
                 elif x == 'int':              pres = trial.suggest_int(t,        p[1], p[2])
                 elif x == 'uniform':          pres = trial.suggest_uniform(t,    p[1], p[2])
-                elif x == 'categorical':      pres = trial.suggest_categorical(t, p[3])
+                elif x == 'categorical':      pres = trial.suggest_categorical(t, p[1])
                 elif x == 'discrete_uniform': pres = trial.suggest_discrete_uniform(t, p[1], p[2], p[3])
                 else:
                     print(f'Not supported type {t}, {p}')
